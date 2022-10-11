@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE language SYSTEM "language.dtd">
+
+<language name="erm" extensions="*.erm" section="Markup" mimetype="text/homm3erm" version="1" kateversion="5.0" casesensitive="1"> 
+<highlighting>
+	<list name="triggers">
+		<item>AI</item>
+		<item>AE</item>
+		<item>BA</item>
+		<item>BF</item>
+		<item>BG</item>
+		<item>BR</item>
+		<item>CM</item>
+		<item>CI</item>
+		<item>CO</item>
+		<item>DG</item>
+		<item>DL</item>
+		<item>FC</item>
+		<item>FU</item>
+		<item>GE</item>
+		<item>GM</item>
+		<item>HD</item>
+		<item>HE</item>
+		<item>HL</item>
+		<item>HM</item>
+		<item>IP</item>
+		<item>LE</item>
+		<item>MF</item>
+		<item>MG</item>
+		<item>M</item>
+		<item>M</item>
+		<item>MP</item>
+		<item>MR</item>
+		<item>MW</item>
+		<item>OB</item>
+		<item>PI</item>
+		<item>SN</item>
+		<item>TH</item>
+		<item>TL</item>
+	</list>
+	<list name="receivers">
+		<item>A1</item>
+		<item>AC</item>
+		<item>AP</item>
+		<item>BI</item>
+		<item>BG</item>
+		<item>C</item>
+		<item>CT</item>
+		<item>CB</item>
+		<item>CG</item>
+		<item>CC</item>
+		<item>CO</item>
+		<item>E</item>
+		<item>E1</item>
+		<item>H</item>
+		<item>HC</item>
+		<item>HEX</item>
+		<item>HK</item>
+		<item>HL</item>
+		<item>HS</item>
+		<item>IS</item>
+		<item>M1</item>
+		<item>M2</item>
+		<item>MI</item>
+		<item>MP</item>
+		<item>OB</item>
+		<item>OV</item>
+		<item>P2</item>
+		<item>PK</item>
+		<item>PM</item>
+		<item>PM1</item>
+		<item>PM2</item>
+		<item>PM3</item>
+		<item>R</item>
+		<item>SE1</item>
+		<item>SE2</item>
+		<item>SE3</item>
+		<item>SE4</item>
+		<item>SE5</item>
+		<item>SN</item>
+		<item>SP</item>
+		<item>SS</item>
+		<item>SQ</item>
+		<item>T</item>
+		<item>TO</item>
+		<item>TR</item>
+		<item>U</item>
+		<item>U1</item>
+
+		<item>UN</item>
+
+		<item>if</item>
+		<item>IF</item>
+		
+	</list>
+<contexts>
+	<context name="Normal Text" attribute="Normal Text" lineEndContext="#pop">
+		<RegExpr attribute="Header" context="#stay" String="^ZVSE" column="0"/>
+		<keyword attribute="Trigger" String="triggers" context="#stay" />
+		<keyword attribute="Receiver" String="receivers" context="#stay" />
+		<RegExpr context="comment"  String="^[ ]*[0-9a-zA-Z*/]" />
+		<Int attribute="Int" context="#stay"  />
+		<DetectChar context="comment"  char=";" />
+		<Detect2Chars attribute="Call" char="!" char1="?" context="On Trigger"/>
+		<Detect2Chars attribute="Call" char="!" char1="!"  context="Function Call" />
+		<Detect2Chars attribute="Call Once" char="!" char1="#"  context="Function Call" />
+		<DetectChar attribute= "Bracket Comment" char="["             context="Bracket comment"/>
+		<DetectChar attribute="String" char="^" context="Single Hat-string"/>
+		<RegExpr attribute="Variable" String="[vyz]-?[0-9]+" context="#stay" /> 
+	</context>
+
+	<context attribute="Comment" name="comment"  lineEndContext="#pop">
+		<RegExpr attribute="Call" String="![!#]" context="#pop" />
+	</context>
+
+
+	<context name="On Trigger" attribute="Call"  lineEndContext="#pop" >
+		<keyword attribute="Trigger" String="triggers" context="#stay" />
+		<DetectChar  char=";" context="#pop" />
+	</context>
+
+	<context name="Function Call" attribute="Call"  lineEndContext="#pop" >
+		<keyword attribute="Trigger" String="triggers" context="#pop" />
+		<keyword attribute="Receiver" String="receivers" context="#pop" />
+		<DetectChar  char=";" context="#pop" />
+	</context>
+
+
+	<context name        = "StringVariants" attribute="Normal Text" lineEndContext="#stay">
+		<DetectSpaces/>
+		<RegExpr attribute = "String" String="'"                  insensitive="true" context="Single A-string"/>
+		<RegExpr attribute = "String" String="&quot;"             insensitive="true" context="Single Q-string"/>
+		<DetectChar attribute= "Bracket Comment" char="["             context="Bracket comment"/>
+	</context>
+
+	<context name="Bracket comment" attribute="Bracket Comment" lineEndContext="#pop">
+		<HlCStringChar attribute="Comment" context="#stay"/>
+		<DetectChar attribute="Bracket Comment" char="]" context="#pop"/>
+	</context>
+
+	<context name="Single A-string" attribute="Comment" lineEndContext="#stay">
+		<HlCStringChar attribute="Comment" context="#stay"/>
+		<DetectChar attribute="Comment" char="'" context="#pop"/>
+	</context>
+
+	<context name="Single Q-string" attribute="Comment" lineEndContext="#stay">
+		<HlCStringChar attribute="Comment" context="#stay"/>
+		<DetectChar attribute="Comment" char="&quot;" context="#pop"/>
+	</context>
+
+	<context name="Single Hat-string" attribute="String" lineEndContext="#stay">
+		<DetectChar attribute="String" char="^" context="#pop"/>
+		<RegExpr attribute="StringValue" String="%[VYZ]-?[0-9]+" context="#stay" /> 
+		<RegExpr attribute="StringValue" String="V998" context="#stay" /> 
+	</context>
+
+
+</contexts>
+
+<itemDatas>
+	<itemData name = "Normal Text" defStyleNum   = "dsNormal" />
+	<itemData name = "Header" defStyleNum   = "dsKeyword" bold           = "1" />
+	<itemData name = "Variable" defStyleNum = "dsKeyword" spellChecking = "false" />
+	<itemData name = "Comment" defStyleNum = "dsComment" spellChecking = "false" />
+	<itemData name = "Bracket Comment" defStyleNum = "dsComment" bold="1" spellChecking = "false" />
+	<itemData name = "StringValue" defStyleNum   = "dsVariable" bold           = "1" />
+	<itemData name = "Variable" defStyleNum   = "dsVariable" bold           = "1" />
+
+	<itemData name = "Trigger" defStyleNum  = "dsKeyword" bold          = "1" spellChecking="false" />
+	<itemData name = "Call" defStyleNum     = "dsFunction"  />
+	<itemData name = "Call Once" defStyleNum     = "dsFunction" underline="1" />
+	<itemData name = "On Trigger" defStyleNum     = "dsFunction"  />
+	<itemData name = "Receiver" defStyleNum = "dsKeyword" bold          = "1" spellChecking="false" />
+	<itemData name = "String" defStyleNum   = "dsString"   />
+	<itemData name = "Int" defStyleNum   = "dsInt"   />
+
+</itemDatas>
+
+</highlighting>
+
+<general>
+	<comments>
+		<comment name="singleLine" start="1"/>
+	</comments>
+</general>
+
+</language>
+<!-- kate: replace-tabs off; -->
